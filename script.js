@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UOZUMI BASTARD
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.0
 // @description  問題演習の答えハイライトと修了証の偽装を行うスクリプト
 // @match        https://joho.jun3010.me/*
 // @grant        none
