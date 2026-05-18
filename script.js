@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UOZUMI BASTARD
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      1.2
 // @description  問題演習の答えハイライトと修了証の偽装を行うスクリプト
 // @match        https://joho.jun3010.me/*
 // @grant        none
@@ -49,48 +49,44 @@
 
             const gui = document.createElement('div');
             gui.id = 'joholife-cheat-menu';
-            // スマホ向けにスタイルを最適化: widthを広げ、パディングを調整、フォントサイズを少し大きく
-            gui.style = 'position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:white;padding:15px;border-radius:10px;z-index:2147483647;font-family:sans-serif;box-shadow: 0 4px 12px rgba(0,0,0,0.6); width: min(300px, 92vw); max-height: 85vh; overflow-y: auto; touch-action: none;';
+            gui.style = 'position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.85);color:white;padding:12px;border-radius:8px;z-index:2147483647;font-family:sans-serif;box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 270px;';
             gui.innerHTML = `
-                <div id="cheat-header" style="cursor:grab; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:12px;">
-                    <h3 style="margin:0; font-size:16px; color:#10b981; user-select:none; font-weight:bold;">🙃UOZUMI BASTARD🙃</h3>
-                    <div style="display:flex; gap: 10px; align-items:center;">
-                        <button id="cheat-rescan-btn" style="background:#444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:12px; cursor:pointer;">♻️</button>
-                        <span id="cheat-toggle-icon" style="font-size:16px; color:#aaa; cursor:pointer; padding:0 5px; user-select:none;">▼</span>
-                    </div>
+                <div id="cheat-header" style="cursor:grab; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #444; padding-bottom:8px; margin-bottom:10px;">
+                    <h3 style="margin:0; font-size:15px; color:#10b981; user-select:none;">UOZUMI BASTARD</h3>
+                    <span id="cheat-toggle-icon" style="font-size:12px; color:#aaa; cursor:pointer; padding:0 5px; user-select:none;">▼</span>
                 </div>
                 <div id="cheat-content">
-                    <div style="margin-bottom:12px;">
-                        <label style="display:flex;align-items:center;font-size:14px;cursor:pointer;background:#222;padding:8px;border-radius:6px;border:1px solid #444;">
-                            <input type="checkbox" id="cheat-highlight-toggle" checked style="margin-right:10px; width:18px; height:18px; cursor:pointer;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:flex;align-items:center;font-size:13px;cursor:pointer;background:#222;padding:6px;border-radius:4px;border:1px solid #444;">
+                            <input type="checkbox" id="cheat-highlight-toggle" checked style="margin-right:8px; width:16px; height:16px; cursor:pointer;">
                             正解ハイライトを表示
                         </label>
                     </div>
-                    <div style="margin-bottom:10px; border-top:1px solid #444; padding-top:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">名前 (Name):</label>
-                        <input type="text" id="cheat-name" placeholder="修了証の名前を上書き" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px; border-top:1px solid #444; padding-top:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">名前 (Name):</label>
+                        <input type="text" id="cheat-name" placeholder="修了証の名前を上書き" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">端末 (UserAgent):</label>
-                        <input type="text" id="cheat-ua" placeholder="詳しい人以外は値を入力するのを非推奨"  style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">端末 (UserAgent):</label>
+                        <input type="text" id="cheat-ua" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">画面 (Screen):</label>
-                        <input type="text" id="cheat-screen" placeholder="空欄の場合は自分の画面比率" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">画面 (Screen):</label>
+                        <input type="text" id="cheat-screen" value="1920x1080" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">発行時刻 (Time):</label>
-                        <input type="text" id="cheat-time" value="" placeholder="空欄の場合は実際の時刻を使用" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">発行時刻 (Time):</label>
+                        <input type="text" id="cheat-time" value="" placeholder="空欄の場合は実際の時刻を使用" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">アクセス元 (IP):</label>
-                        <input type="text" id="cheat-ip" placeholder="空欄の場合は自分のIP" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">アクセス元 (IP):</label>
+                        <input type="text" id="cheat-ip" value="192.168.1.1" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="margin-bottom:10px;">
-                        <label style="display:block;font-size:12px;margin-bottom:4px;color:#ccc;">端末識別 (Device Hash):</label>
-                        <input type="text" id="cheat-hash" value="" placeholder="空欄の場合は自動生成の番号" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:8px;border-radius:4px;font-size:14px;">
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block;font-size:11px;margin-bottom:3px;color:#ccc;">端末識別 (Device Hash):</label>
+                        <input type="text" id="cheat-hash" value="" placeholder="空欄の場合は自動生成の番号" style="width:100%;box-sizing:border-box;background:#111;color:#10b981;border:1px solid #555;padding:5px;border-radius:4px;font-size:12px;">
                     </div>
-                    <div style="font-size:11px;color:#777;margin-top:8px;text-align:center;">※修了証生成時に自動適用</div>
+                    <div style="font-size:10px;color:#777;margin-top:5px;text-align:center;">※修了証生成時に自動適用</div>
                 </div>
             `;
             document.body.appendChild(gui);
@@ -107,13 +103,7 @@
                 }
             });
 
-            // 手動再スキャンボタンのイベント
-            document.getElementById('cheat-rescan-btn').addEventListener('click', (e) => {
-                e.stopPropagation(); // ドラッグイベントの発火を防ぐ
-                scanHighlights();
-            });
-
-            // ドラッグ機能の実装 (マウス & タッチ)
+            // ドラッグ機能の実装
             const header = document.getElementById('cheat-header');
             let isDragging = false;
             let currentX;
@@ -123,31 +113,23 @@
             let xOffset = 0;
             let yOffset = 0;
 
+            header.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+
             function dragStart(e) {
-                // ボタン類をクリックした場合はドラッグを開始しない
-                if (e.target.id === 'cheat-toggle-icon' || e.target.id === 'cheat-rescan-btn') return;
-
-                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-                initialX = clientX - xOffset;
-                initialY = clientY - yOffset;
+                if (e.target.id === 'cheat-toggle-icon') return;
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
                 isDragging = true;
                 header.style.cursor = 'grabbing';
             }
 
             function drag(e) {
                 if (isDragging) {
-                    if (e.type === 'touchmove') {
-                        // タッチ中の画面スクロールを完全に防止（スマホでの操作性向上のため）
-                        e.preventDefault();
-                    }
-
-                    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-                    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-                    currentX = clientX - initialX;
-                    currentY = clientY - initialY;
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
                     xOffset = currentX;
                     yOffset = currentY;
                     gui.style.transform = `translate(${currentX}px, ${currentY}px)`;
@@ -161,15 +143,6 @@
                 isDragging = false;
                 header.style.cursor = 'grab';
             }
-
-            header.addEventListener('mousedown', dragStart);
-            header.addEventListener('touchstart', dragStart, { passive: false });
-            // document 全体でイベントを監視することで、ドラッグが速すぎて要素から外れても追従する
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('mouseup', dragEnd);
-            document.addEventListener('touchend', dragEnd);
-
 
             // ハイライトのリアルタイム切り替えイベント
             document.getElementById('cheat-highlight-toggle').addEventListener('change', (e) => {
@@ -224,115 +197,96 @@
         };
 
         // ----------------------------------------------------
-        // 問題データの自動取得と解析
+        // Fetchのフック (問題データの横取り)
         // ----------------------------------------------------
-        let correctAnswersMap = {};
+        const correctAnswersMap = {};
 
-        function fetchAndParseQuestions() {
-            // URLから問題の識別子（例: binary_conversion）を取得
-            const match = location.pathname.match(/\/quiz\/([^\/]+)/);
-            if (match && match[1]) {
-                const quizId = match[1];
-                const yamlUrl = `/questions/${quizId}/questions.yaml`;
-                console.log("[Debug] 問題データを自動取得します:", yamlUrl);
+        const originalFetch = window.fetch;
+        window.fetch = async function (...args) {
+            let url = args[0];
+            if (url && typeof url.url === 'string') {
+                url = url.url; // Request オブジェクトの対応
+            }
 
-                fetch(yamlUrl)
-                    .then(res => {
-                        if (!res.ok) throw new Error("Network response was not ok");
-                        return res.text();
-                    })
-                    .then(yamlText => {
-                        correctAnswersMap = {};
-                        const lines = yamlText.split('\n');
-                        let currentQuestionId = null;
-                        let currentOptionId = null;
+            const response = await originalFetch.apply(this, args);
 
-                        for (let i = 0; i < lines.length; i++) {
-                            const line = lines[i];
-                            const trimmed = line.trim();
+            // yamlデータの場合のみ解析
+            if (typeof url === 'string' && url.endsWith('questions.yaml')) {
+                console.log("[Debug] 問題データを検出しました:", url);
+                const clone = response.clone();
+                clone.text().then(yamlText => {
+                    const lines = yamlText.split('\n');
+                    let currentQuestionId = null;
+                    let currentOptionId = null;
 
-                            if (trimmed.startsWith('- id:')) {
-                                const id = trimmed.substring(5).trim().replace(/['"]/g, '');
-                                const indent = line.search(/\S/);
-                                if (indent === 2 || indent === 4) {
-                                    currentQuestionId = id;
-                                    correctAnswersMap[currentQuestionId] = [];
-                                } else if (indent === 6 || indent === 8) {
-                                    currentOptionId = id;
-                                }
-                            }
-                            else if (trimmed.startsWith('answer:')) {
-                                if (currentQuestionId) {
-                                    correctAnswersMap[currentQuestionId].push(trimmed.substring(7).trim().replace(/['"]/g, ''));
-                                }
-                            }
-                            else if (trimmed.startsWith('isCorrect:')) {
-                                const isCorrect = trimmed.includes('true');
-                                if (isCorrect && currentQuestionId && currentOptionId) {
-                                    correctAnswersMap[currentQuestionId].push(currentOptionId);
-                                }
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i];
+                        const trimmed = line.trim();
+
+                        if (trimmed.startsWith('- id:')) {
+                            const id = trimmed.substring(5).trim().replace(/['"]/g, '');
+                            const indent = line.search(/\S/);
+                            if (indent === 2 || indent === 4) {
+                                currentQuestionId = id;
+                                correctAnswersMap[currentQuestionId] = [];
+                            } else if (indent === 6 || indent === 8) {
+                                currentOptionId = id;
                             }
                         }
-                        console.log("[Debug] 問題データの正解を解析しました:", correctAnswersMap);
-                        scanHighlights();
-                    })
-                    .catch(err => {
-                        console.error("[Debug] 問題データの自動取得に失敗しました:", err);
-                    });
-            }
-        }
-
-        // ページ遷移時にも対応できるようURL変更を検知
-        let lastUrl = location.href;
-        setInterval(() => {
-            if (lastUrl !== location.href) {
-                lastUrl = location.href;
-                fetchAndParseQuestions();
-            }
-        }, 1000);
-
-        // 初回実行
-        fetchAndParseQuestions();
-
-        // ----------------------------------------------------
-        // ハイライト処理の実体
-        // ----------------------------------------------------
-        function scanHighlights() {
-            // 選択肢問題
-            const buttons = document.querySelectorAll('.option-button');
-            buttons.forEach(btn => {
-                const qId = btn.getAttribute('data-question-id');
-                const oId = btn.getAttribute('data-option-id');
-
-                // 正解データがある場合のみ処理
-                if (qId && oId && correctAnswersMap[qId]) {
-                    if (correctAnswersMap[qId].includes(oId)) {
-                        btn.setAttribute('data-cheat-correct', 'true'); // CSS用属性
-
-                        if (!btn.querySelector('.cheat-highlight-text')) {
-                            const span = document.createElement('span');
-                            span.className = 'cheat-highlight-text'; // CSSで表示切替
-                            span.innerHTML = ' <strong style="color:#10b981;">[✓正解]</strong>';
-                            const textContainer = btn.querySelector('span');
-                            if (textContainer) {
-                                textContainer.appendChild(span);
+                        else if (trimmed.startsWith('answer:')) {
+                            if (currentQuestionId) {
+                                correctAnswersMap[currentQuestionId].push(trimmed.substring(7).trim().replace(/['"]/g, ''));
+                            }
+                        }
+                        else if (trimmed.startsWith('isCorrect:')) {
+                            const isCorrect = trimmed.includes('true');
+                            if (isCorrect && currentQuestionId && currentOptionId) {
+                                correctAnswersMap[currentQuestionId].push(currentOptionId);
                             }
                         }
                     }
+                    console.log("[Debug] 問題データの正解を解析しました:", correctAnswersMap);
+                });
+            }
+            return response;
+        };
+
+        // ----------------------------------------------------
+        // DOM監視 (正解のハイライト処理)
+        // ----------------------------------------------------
+        const observer = new MutationObserver((mutations) => {
+            // 選択肢問題
+            const buttons = document.querySelectorAll('.option-button:not([data-cheated="true"])');
+            buttons.forEach(btn => {
+                const qId = btn.getAttribute('data-question-id');
+                const oId = btn.getAttribute('data-option-id');
+                if (qId && oId && correctAnswersMap[qId] && correctAnswersMap[qId].includes(oId)) {
+                    btn.setAttribute('data-cheated', 'true');
+                    btn.setAttribute('data-cheat-correct', 'true'); // CSS用属性
+
+                    const span = document.createElement('span');
+                    span.className = 'cheat-highlight-text'; // CSSで表示切替
+                    span.innerHTML = ' <strong style="color:#10b981;">[✓正解]</strong>';
+                    const textContainer = btn.querySelector('span');
+                    if (textContainer) {
+                        textContainer.appendChild(span);
+                    }
+                } else if (qId && oId) {
                     btn.setAttribute('data-cheated', 'true'); // 処理済みマーク
                 }
             });
 
             // テキスト入力問題
             const textInput = document.getElementById('text-input-answer');
-            if (textInput) {
+            if (textInput && !textInput.dataset.cheated) {
+                textInput.dataset.cheated = "true";
                 const qId = textInput.getAttribute('data-question-id');
-                if (qId && correctAnswersMap[qId] && correctAnswersMap[qId].length > 0 && !textInput.nextSibling?.classList?.contains('cheat-auto-input-btn')) {
+                if (qId && correctAnswersMap[qId] && correctAnswersMap[qId].length > 0) {
                     const answer = correctAnswersMap[qId][0];
                     const helperBtn = document.createElement('button');
                     helperBtn.className = 'cheat-auto-input-btn'; // CSSで表示切替
                     helperBtn.innerText = `💡 正解を自動入力: ${answer}`;
-                    helperBtn.style = 'margin-top: 8px; background: #10b981; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px; display: block;';
+                    helperBtn.style = 'margin-top: 8px; background: #10b981; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px;';
                     helperBtn.onclick = (e) => {
                         e.preventDefault();
                         textInput.value = answer;
@@ -341,26 +295,17 @@
                     textInput.parentNode.insertBefore(helperBtn, textInput.nextSibling);
                 }
             }
-        }
-
-        // ----------------------------------------------------
-        // DOM監視 (正解のハイライト処理)
-        // ----------------------------------------------------
-        const observer = new MutationObserver((mutations) => {
-            scanHighlights();
         });
 
         // 監視開始
         function startObserver() {
             if (document.documentElement) {
                 observer.observe(document.documentElement, { childList: true, subtree: true });
-                scanHighlights(); // 初回スキャン
             } else {
                 setTimeout(startObserver, 100);
             }
         }
         startObserver();
-
     };
 
     // 実際のページ（コンテキスト）にスクリプトを注入して実行する
@@ -378,4 +323,3 @@
     inject();
 
 })();
-
